@@ -437,6 +437,13 @@ async def get_bookings(telegram_id: int, status: Optional[str] = None):
         logger.error(f"Get bookings error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.patch("/api/bookings/{booking_id}/cancel")
+async def cancel_booking(booking_id: str):
+    result = supabase.table('bookings').update(
+        {'status': 'cancelled'}
+    ).eq('id', booking_id).execute()
+    return {"success": True}
+
 if __name__ == "__main__":
     import uvicorn
     logger.info("Starting server...")
